@@ -1,6 +1,7 @@
 {
   "tls": true,
   "interface": "0.0.0.0",
+  "scope": "/miiify",
   "port": 8080,
   "certificate_file": "server.crt",
   "key_file": "server.key",

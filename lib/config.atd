@@ -2,6 +2,7 @@
 type config = {
   ~tls <ocaml default="true"> : bool;
   ~interface <ocaml default="\"0.0.0.0\""> : string;
+  ~scope <ocaml default="\"\""> : string;
   ~port <ocaml default="8080"> : int;
   ~certificate_file <ocaml default="\"server.crt\""> : string;
   ~key_file <ocaml default="\"server.key\""> : string;

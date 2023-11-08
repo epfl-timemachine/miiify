@@ -245,48 +245,50 @@ let run ctx =
     ~key_file:ctx.config.key_file
   @@ Dream.logger
   @@ Dream.router
-       [
-         Dream.options "/" (fun _ ->
-             options_response [ "OPTIONS"; "HEAD"; "GET" ]);
-         Dream.head "/" (html_response welcome_message);
-         Dream.get "/" (html_response welcome_message);
-         Dream.options "/version" (fun _ ->
-             options_response [ "OPTIONS"; "HEAD"; "GET" ]);
-         Dream.head "/version" (html_response version_message);
-         Dream.get "/version" (html_response version_message);
-         Dream.options "/manifest/" (fun _ ->
-             options_response
-               [ "OPTIONS"; "HEAD"; "GET"; "POST"; "PUT"; "DELETE" ]);
-         Dream.head "/manifest/:manifest_id" (get_manifest ctx);
-         Dream.get "/manifest/:manifest_id" (get_manifest ctx);
-         Dream.post "/manifest/:manifest_id" (post_manifest ctx);
-         Dream.put "/manifest/:manifest_id" (put_manifest ctx);
-         Dream.delete "/manifest/:manifest_id" (delete_manifest ctx);
-         Dream.options "/annotations/" (fun _ ->
-             options_response [ "OPTIONS"; "POST" ]);
-         Dream.post "/annotations/" (post_container ctx);
-         Dream.options "/annotations/:container_id/:annotation_id" (fun _ ->
-             options_response [ "OPTIONS"; "HEAD"; "GET"; "PUT"; "DELETE" ]);
-         Dream.head "/annotations/:container_id/:annotation_id"
-           (get_annotation ctx);
-         Dream.get "/annotations/:container_id/:annotation_id"
-           (get_annotation ctx);
-         Dream.put "/annotations/:container_id/:annotation_id"
-           (put_annotation ctx);
-         Dream.delete "/annotations/:container_id/:annotation_id"
-           (delete_annotation ctx);
-         Dream.options "/annotations/:container_id/" (fun _ ->
-             options_response [ "OPTIONS"; "HEAD"; "GET"; "POST"; "DELETE" ]);
-         Dream.head "/annotations/:container_id/"
-           (get_annotation_collection ctx);
-         Dream.get "/annotations/:container_id/" (get_annotation_collection ctx);
-         Dream.post "/annotations/:container_id/" (post_annotation ctx);
-         Dream.delete "/annotations/:container_id/" (delete_container ctx);
-         Dream.options "/annotations/:container_id" (fun _ ->
-             options_response [ "OPTIONS"; "HEAD"; "GET" ]);
-         Dream.head "/annotations/:container_id" (get_annotation_pages ctx);
-         Dream.get "/annotations/:container_id" (get_annotation_pages ctx);
-       ]
+      [
+        Dream.scope ctx.config.scope [] [
+          Dream.options "/" (fun _ ->
+              options_response [ "OPTIONS"; "HEAD"; "GET" ]);
+          Dream.head "/" (html_response welcome_message);
+          Dream.get "/" (html_response welcome_message);
+          Dream.options "/version" (fun _ ->
+              options_response [ "OPTIONS"; "HEAD"; "GET" ]);
+          Dream.head "/version" (html_response version_message);
+          Dream.get "/version" (html_response version_message);
+          Dream.options "/manifest/" (fun _ ->
+              options_response
+                [ "OPTIONS"; "HEAD"; "GET"; "POST"; "PUT"; "DELETE" ]);
+          Dream.head "/manifest/:manifest_id" (get_manifest ctx);
+          Dream.get "/manifest/:manifest_id" (get_manifest ctx);
+          Dream.post "/manifest/:manifest_id" (post_manifest ctx);
+          Dream.put "/manifest/:manifest_id" (put_manifest ctx);
+          Dream.delete "/manifest/:manifest_id" (delete_manifest ctx);
+          Dream.options "/annotations/" (fun _ ->
+              options_response [ "OPTIONS"; "POST" ]);
+          Dream.post "/annotations/" (post_container ctx);
+          Dream.options "/annotations/:container_id/:annotation_id" (fun _ ->
+              options_response [ "OPTIONS"; "HEAD"; "GET"; "PUT"; "DELETE" ]);
+          Dream.head "/annotations/:container_id/:annotation_id"
+            (get_annotation ctx);
+          Dream.get "/annotations/:container_id/:annotation_id"
+            (get_annotation ctx);
+          Dream.put "/annotations/:container_id/:annotation_id"
+            (put_annotation ctx);
+          Dream.delete "/annotations/:container_id/:annotation_id"
+            (delete_annotation ctx);
+          Dream.options "/annotations/:container_id/" (fun _ ->
+              options_response [ "OPTIONS"; "HEAD"; "GET"; "POST"; "DELETE" ]);
+          Dream.head "/annotations/:container_id/"
+            (get_annotation_collection ctx);
+          Dream.get "/annotations/:container_id/" (get_annotation_collection ctx);
+          Dream.post "/annotations/:container_id/" (post_annotation ctx);
+          Dream.delete "/annotations/:container_id/" (delete_container ctx);
+          Dream.options "/annotations/:container_id" (fun _ ->
+              options_response [ "OPTIONS"; "HEAD"; "GET" ]);
+          Dream.head "/annotations/:container_id" (get_annotation_pages ctx);
+          Dream.get "/annotations/:container_id" (get_annotation_pages ctx);
+        ]
+      ]
 
 let init config =
   {
