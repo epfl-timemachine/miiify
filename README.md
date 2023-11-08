@@ -203,6 +203,7 @@ The server can be started with the command flag ```--config=<file>``` to specify
 {
   "tls": true,
   "interface": "0.0.0.0",
+  "scope": "",
   "port": 8080,
   "certificate_file": "server.crt",
   "key_file": "server.key",
