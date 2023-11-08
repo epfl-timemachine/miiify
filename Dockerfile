@@ -32,7 +32,8 @@ COPY assets assets
 
 USER miiify
 
+COPY config.json /home/miiify/config.json
+
 RUN openssl req -x509 -newkey rsa:4096 -keyout server.key -out server.crt -days 3650 -nodes -subj "/C=UK/ST=foo/L=bar/O=baz/OU= Department/CN=localhost.local"
 
-ENTRYPOINT ["/home/miiify/app"]
-
+ENTRYPOINT ["/home/miiify/app", "--config", "/home/miiify/config.json"]
