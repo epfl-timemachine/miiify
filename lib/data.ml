@@ -5,11 +5,11 @@ let get_timestamp () =
   Ptime.to_rfc3339 t ~tz_offset_s:0
 ;;
 
-let get_iri host id =
+let get_iri host id scope =
   match id with
-  | [ container_id; "main" ] -> host ^ "/annotations/" ^ container_id
+  | [ container_id; "main" ] -> host ^ scope ^ "/annotations/" ^ container_id
   | [ container_id; "collection"; annotation_id ] ->
-    host ^ "/annotations/" ^ container_id ^ "/" ^ annotation_id
+    host ^ scope ^ "/annotations/" ^ container_id ^ "/" ^ annotation_id
   | _ -> failwith "well that's embarassing"
 ;;
 
@@ -38,40 +38,40 @@ let is_container data =
   | _ -> false
 ;;
 
-let post_worker json id host =
+let post_worker json id host scope =
   if mem json [ "id" ]
   then Result.error "id can not be supplied"
   else (
-    let iri = get_iri host id in
+    let iri = get_iri host id scope in
     let timestamp = get_timestamp () in
     let json = update json [ "id" ] (Some (string iri)) in
     let json = update json [ "created" ] (Some (string timestamp)) in
     Result.ok json)
 ;;
 
-let post_annotation ~data ~id ~host =
+let post_annotation ~data ~id ~host ~scope =
   match from_string data with
   | exception Parse_error (_, _) -> Result.error "could not parse JSON"
   | json ->
     if is_annotation json
-    then post_worker json id host
+    then post_worker json id host scope
     else Result.error "annotation type not found"
 ;;
 
-let post_container ~data ~id ~host =
+let post_container ~data ~id ~host ~scope =
   match from_string data with
   | exception Parse_error (_, _) -> Result.error "could not parse JSON"
   | json ->
     if is_container json
-    then post_worker json id host
+    then post_worker json id host scope
     else Result.error "container type not found"
 ;;
 
-let put_annotation_worker json id host =
+let put_annotation_worker json id host scope =
   match find_opt json [ "id" ] with
   | None -> Result.error "id does not exit"
   | Some id' ->
-    let iri = get_iri host id in
+    let iri = get_iri host id scope in
     (match get_string id' with
     | exception Parse_error (_, _) -> Result.error "id not string"
     | iri' ->
@@ -83,12 +83,12 @@ let put_annotation_worker json id host =
       else Result.error "id in body does not match")
 ;;
 
-let put_annotation ~data ~id ~host =
+let put_annotation ~data ~id ~host ~scope =
   match from_string data with
   | exception Parse_error (_, _) -> Result.error "could not parse JSON"
   | json ->
     if is_annotation json
-    then put_annotation_worker json id host
+    then put_annotation_worker json id host scope
     else Result.error "annotation type not found"
 ;;
 

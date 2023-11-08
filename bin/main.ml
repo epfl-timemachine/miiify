@@ -87,7 +87,7 @@ let post_container ctx request =
       let container_id = Header.get_id request in
       let key = [ container_id; "main" ] in
       Dream.body request >>= fun body ->
-      Data.post_container ~data:body ~id:key ~host |> function
+      Data.post_container ~data:body ~id:key ~host ~scope:ctx.config.scope |> function
       | Error m -> error_response `Bad_Request m
       | Ok json ->
           container_exists ~db:ctx.db ~key >>= fun yes ->
@@ -198,7 +198,7 @@ let post_annotation ctx request =
       let container_id = Dream.param request "container_id" in
       let key = [ container_id; "collection"; Header.get_id request ] in
       Dream.body request >>= fun body ->
-      Data.post_annotation ~data:body ~id:key ~host |> function
+      Data.post_annotation ~data:body ~id:key ~host ~scope:ctx.config.scope |> function
       | Error m -> error_response `Bad_Request m
       | Ok json ->
           container_exists ~db:ctx.db ~key:[ container_id ] >>= fun yes ->
@@ -221,7 +221,7 @@ let put_annotation ctx request =
       let container_id = Dream.param request "container_id" in
       let annotation_id = Dream.param request "annotation_id" in
       let key = [ container_id; "collection"; annotation_id ] in
-      Data.put_annotation ~data:body ~id:key ~host |> function
+      Data.put_annotation ~data:body ~id:key ~host ~scope:ctx.config.scope |> function
       | Error m -> error_response `Bad_Request m
       | Ok json -> (
           get_hash ~db:ctx.db ~key >>= function
