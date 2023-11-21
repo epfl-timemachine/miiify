@@ -112,8 +112,12 @@ let annotation_page_response page count limit main collection representation =
 
 let target_equals item target =
   let open Ezjsonm in
-  let value = find item [ "target" ] in
-  value = `String target
+  match find item [ "target" ] with
+  | `String value -> value = target
+  | target_list -> (
+      let value = find target_list [ "source" ] in
+      value = `String target
+    )
 ;;
 
 let filter_on_target collection target =
